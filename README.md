@@ -12,3 +12,4 @@ Sort by marks: Ascending order of marks
 Sort by passing: Show only passing students
 Sort by class: Ascending order of class
 Sort by gender: Display two tables, one for female students and one for male students, shown one below the other.
+Run on http://localhost:5500/display1.html
