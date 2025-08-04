@@ -1,0 +1,269 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Grid Application</title>
+  <style>
+    #grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 10px;
+      margin-bottom: 20px;
+    }
+    .grid-item {
+      width: 100px;
+      height: 100px;
+      background-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid black;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="grid-container">
+    <div class="grid-item" id="1">1</div>
+    <div class="grid-item" id="2">2</div>
+    <div class="grid-item" id="3">3</div>
+    <div class="grid-item" id="4">4</div>
+    <div class="grid-item" id="5">5</div>
+    <div class="grid-item" id="6">6</div>
+    <div class="grid-item" id="7">7</div>
+    <div class="grid-item" id="8">8</div>
+    <div class="grid-item" id="9">9</div>
+  </div>
+
+  <input type="number" id="block_id" placeholder="Enter Block ID (1-9)">
+  <input type="text" id="colour_id" placeholder="Enter Color">
+  <button id="change_button">Change Color</button>
+  <button id="Reset">Reset</button>
+
+  <script>
+    const changeButton = document.getElementById('change_button');
+    const resetButton = document.getElementById('Reset');
+
+    changeButton.addEventListener('click', () => {
+      const blockId = document.getElementById('block_id').value;
+      const color = document.getElementById('colour_id').value;
+      
+      // Reset all grid items to transparent
+      for (let i = 1; i <= 9; i++) {
+        document.getElementById(i.toString()).style.backgroundColor = 'transparent';
+      }
+
+      // Change background color of selected block
+      if (blockId >= 1 && blockId <= 9) {
+        document.getElementById(blockId).style.backgroundColor = color;
+      } else {
+        alert('Invalid Block ID!');
+      }
+    });
+
+    resetButton.addEventListener('click', () => {
+      // Reset all grid items to transparent
+      for (let i = 1; i <= 9; i++) {
+        document.getElementById(i.toString()).style.backgroundColor = 'transparent';
+      }
+    });
+  </script>
+
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Table Application</title>
+  <style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    .container{
+        margin: 0;
+    }
+    .head{
+        background-color: black;
+        color: aliceblue;
+        height: 10vh;
+        margin: 10px;
+    }
+    .head h1{
+        display:flex;
+        justify-content: center;
+       align-items: center;
+       
+    }
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+   .button-container button{
+     height: 40px;
+     width: 100px;
+     background-color: black;
+     color: aliceblue;
+    }
+    .student-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .student-table th, .student-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    .student-table th {
+      background-color: #f2f2f2;
+    }
+    .search-bar {
+      margin-bottom: 20px;
+      width:100vw;
+    }
+    #search-input{
+    width:80vw;
+    height:5vh;
+    margin-left: 10px;
+    }
+    #search-button{
+      height:5vh;
+      width:10vw;
+    }
+    .student-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="head"><h1>Student Portal</h1></div>
+    <div class="search-bar">
+    <input type="text" id="search-input" placeholder="Search by name or email">
+    <button id="search-button">Search</button>
+  </div>
+
+  <div class="button-container">
+    <button onclick="sortAZ()">Sort A->Z</button>
+    <button onclick="sortZA()">Sort Z->A</button>
+    <button onclick="sortByMarks()">Sort by Marks</button>
+    <button onclick="sortByPassing()">Sort by Passing</button>
+    <button onclick="sortByClass()">Sort by Class</button>
+    <button onclick="sortByGender()">Sort by Gender</button>
+  </div>
+
+  <div id="table-container"></div>
+  </div>
+  
+
+  <script>
+    // const students = [
+    //   {"id":1,"first_name":"Chadwick","last_name":"Ayre","email":"cayre0@cam.ac.uk","gender":"Male","img_src":"https://robohash.org/corporisquiaperiam.png?size=50x50&set=set1","class":11,"marks":18,"passing":false,"city":"Moorreesburg"},
+    //   {"id":2,"first_name":"Jane","last_name":"Smith","gender":"Female","class":12,"marks":92,"passing":true,"email":"jane.smith@example.com","img_src":"https://randomuser.me/api/portraits/women/2.jpg"},
+    //   {"id":3,"first_name":"Alex","last_name":"Johnson","gender":"Male","class":11,"marks":47,"passing":false,"email":"alex.johnson@example.com","img_src":"https://randomuser.me/api/portraits/men/3.jpg"}
+    //   // Add more students up to 100...
+    // ];
+
+    // renderTable(students);
+   
+  let students = [];
+
+  fetch('students.json')
+    .then(response => response.json())
+    .then(data => {
+      students = data;
+      renderTable(students);
+    });
+
+  // (Keep all the other functions as they are: renderTable, searchHandler, sortAZ, sortZA, etc.)
+
+
+
+    function renderTable(data) {
+      let html = '<table class="student-table">';
+      html += `<tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Class</th>
+                <th>Marks</th>
+                <th>Passing</th>
+                <th>Email</th>
+              </tr>`;
+
+      data.forEach(student => {
+        html += `<tr>
+                    <td>${student.id}</td>
+                    <td><img src="${student.img_src}" class="student-img"> ${student.first_name} ${student.last_name}</td>
+                    <td>${student.gender}</td>
+                    <td>${student.class}</td>
+                    <td>${student.marks}</td>
+                    <td>${student.passing ? 'Passing' : 'Failed'}</td>
+                    <td>${student.email}</td>
+                 </tr>`;
+      });
+
+      html += '</table>';
+      document.getElementById('table-container').innerHTML = html;
+    }
+
+    document.getElementById('search-button').addEventListener('click', searchHandler);
+    document.getElementById('search-input').addEventListener('input', searchHandler);
+
+    function searchHandler() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      const filtered = students.filter(student =>
+        student.first_name.toLowerCase().includes(query) ||
+        student.last_name.toLowerCase().includes(query) ||
+        student.email.toLowerCase().includes(query)
+      );
+      renderTable(filtered);
+    }
+
+    function sortAZ() {
+      const sorted = [...students].sort((a, b) => (a.first_name + a.last_name).localeCompare(b.first_name + b.last_name));
+      renderTable(sorted);
+    }
+
+    function sortZA() {
+      const sorted = [...students].sort((a, b) => (b.first_name + b.last_name).localeCompare(a.first_name + a.last_name));
+      renderTable(sorted);
+    }
+
+    function sortByMarks() {
+      const sorted = [...students].sort((a, b) => a.marks - b.marks);
+      renderTable(sorted);
+    }
+
+    function sortByPassing() {
+      const passingStudents = students.filter(student => student.passing);
+      renderTable(passingStudents);
+    }
+
+    function sortByClass() {
+      const sorted = [...students].sort((a, b) => a.class - b.class);
+      renderTable(sorted);
+    }
+
+    function sortByGender() {
+      const females = students.filter(student => student.gender === 'Female');
+      const males = students.filter(student => student.gender === 'Male');
+      document.getElementById('table-container').innerHTML = '';
+      renderTable(females);
+      const separator = document.createElement('hr');
+      document.getElementById('table-container').appendChild(separator);
+      renderTable(males);
+    }
+  </script>
+
+</body>
+</html>
